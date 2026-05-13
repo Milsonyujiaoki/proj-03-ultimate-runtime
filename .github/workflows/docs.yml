@@ -1,0 +1,37 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "runtime/**/*.h"
+      - "runtime/**/*.hpp"
+      - "Doxyfile"
+
+jobs:
+  doxygen:
+    name: Generate & Deploy Docs
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Doxygen + Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz
+
+      - name: Generate Doxygen docs
+        run: doxygen Doxyfile
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/generated/html
+          destination_dir: api

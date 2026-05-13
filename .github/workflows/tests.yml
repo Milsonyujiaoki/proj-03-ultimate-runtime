@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Tests (${{ matrix.preset }})
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: [debug, asan]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build clang-17 clang++-17
+
+      - name: Configure
+        run: cmake --preset ${{ matrix.preset }}
+
+      - name: Build
+        run: cmake --build build/${{ matrix.preset }} --parallel
+
+      - name: Test
+        run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure --parallel 4
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.preset }}
+          path: build/${{ matrix.preset }}/Testing/

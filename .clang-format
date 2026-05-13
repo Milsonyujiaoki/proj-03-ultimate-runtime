@@ -1,0 +1,73 @@
+---
+# clang-format — ultimate-runtime
+# Base: Google style with project-specific overrides
+BasedOnStyle: Google
+
+# Indentation
+IndentWidth:             4
+ContinuationIndentWidth: 4
+TabWidth:                4
+UseTab:                  Never
+
+# Line length
+ColumnLimit: 100
+
+# Braces
+BreakBeforeBraces: Attach
+BraceWrapping:
+  AfterCaseLabel:        false
+  AfterClass:            false
+  AfterControlStatement: Never
+  AfterEnum:             false
+  AfterFunction:         false
+  AfterNamespace:        false
+  AfterStruct:           false
+  AfterUnion:            false
+  BeforeCatch:           false
+  BeforeElse:            false
+  IndentBraces:          false
+
+# Alignment
+AlignAfterOpenBracket:        Align
+AlignConsecutiveAssignments:  Consecutive
+AlignConsecutiveDeclarations: false
+AlignOperands:                Align
+AlignTrailingComments:
+  Kind:           Always
+  OverEmptyLines: 1
+
+# Spaces
+SpaceAfterCStyleCast:          false
+SpaceAfterLogicalNot:          false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens:             ControlStatements
+SpacesInAngles:                Never
+SpacesInParens:                Never
+
+# Includes
+SortIncludes:          CaseSensitive
+IncludeBlocks:         Regroup
+IncludeCategories:
+  - Regex:    '^"'
+    Priority: 1
+  - Regex:    '^<[^/]+>'
+    Priority: 2
+  - Regex:    '^<'
+    Priority: 3
+
+# Pointers & references
+PointerAlignment:   Right
+ReferenceAlignment: Right
+
+# Functions
+AllowShortFunctionsOnASingleLine:  InlineOnly
+AllowShortLambdasOnASingleLine:    All
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine:      false
+
+# Comments
+ReflowComments: true
+
+# Penalties
+PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyReturnTypeOnItsOwnLine:        200

@@ -1,0 +1,75 @@
+name: Security
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"  # Weekly on Monday at 06:00 UTC
+
+jobs:
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-24.04
+
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: cpp
+          queries: security-extended
+
+      - name: Install Ninja
+        run: sudo apt-get install -y ninja-build
+
+      - name: Build for CodeQL
+        run: |
+          cmake --preset debug
+          cmake --build build/debug --parallel
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp"
+
+  cppcheck:
+    name: cppcheck Static Analysis
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cppcheck
+        run: sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        run: |
+          cppcheck \
+            --enable=all \
+            --std=c17 \
+            --suppress=missingIncludeSystem \
+            --error-exitcode=1 \
+            --quiet \
+            runtime/
+
+  secrets-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

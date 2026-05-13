@@ -1,0 +1,111 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 24,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "debug",
+      "inherits": "base",
+      "displayName": "Debug",
+      "description": "Debug build with full debug info",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "UR_BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "inherits": "base",
+      "displayName": "Release",
+      "description": "Optimized release build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "UR_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "asan",
+      "inherits": "debug",
+      "displayName": "AddressSanitizer",
+      "description": "Debug build with ASAN + UBSAN",
+      "cacheVariables": {
+        "UR_ENABLE_ASAN":  "ON",
+        "UR_ENABLE_UBSAN": "ON"
+      }
+    },
+    {
+      "name": "tsan",
+      "inherits": "debug",
+      "displayName": "ThreadSanitizer",
+      "description": "Debug build with TSAN",
+      "cacheVariables": {
+        "UR_ENABLE_TSAN": "ON"
+      }
+    },
+    {
+      "name": "fuzz",
+      "inherits": "base",
+      "displayName": "Fuzzing",
+      "description": "LibFuzzer instrumented build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE":   "RelWithDebInfo",
+        "CMAKE_C_COMPILER":   "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "UR_BUILD_FUZZ":      "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "jobs": 0
+    },
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "jobs": 0
+    },
+    {
+      "name": "asan",
+      "configurePreset": "asan",
+      "jobs": 0
+    },
+    {
+      "name": "tsan",
+      "configurePreset": "tsan",
+      "jobs": 0
+    },
+    {
+      "name": "fuzz",
+      "configurePreset": "fuzz",
+      "jobs": 0
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 0 }
+    },
+    {
+      "name": "asan",
+      "configurePreset": "asan",
+      "output": { "outputOnFailure": true },
+      "execution": { "jobs": 0 }
+    }
+  ]
+}
