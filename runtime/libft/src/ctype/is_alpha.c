@@ -1,0 +1,6 @@
+#include "../../include/ctype.h"
+
+int ft_isalpha(int ch){
+
+	return (ft_isupper(ch) || ft_islower(ch));
+}

@@ -1,81 +1,87 @@
 cmake_minimum_required(VERSION 3.24)
-project(libft VERSION 0.1.0 LANGUAGES C)
 
-include(../../build_system/cmake/compiler_flags.cmake)
-include(../../build_system/cmake/warnings.cmake)
-
-# ── Source discovery ──────────────────────────────────────────────────────────
-# Explicitly listed to avoid accidental inclusion of bonus/private files.
-set(LIBFT_SOURCES
-    src/string/ft_strlen.c
-    src/string/ft_strcpy.c
-    src/string/ft_strlcpy.c
-    src/string/ft_strlcat.c
-    src/string/ft_strdup.c
-    src/string/ft_strncmp.c
-    src/string/ft_strnstr.c
-    src/string/ft_strchr.c
-    src/string/ft_strrchr.c
-    src/string/ft_substr.c
-    src/string/ft_strjoin.c
-    src/string/ft_strtrim.c
-    src/string/ft_split.c
-    src/memory/ft_memset.c
-    src/memory/ft_memcpy.c
-    src/memory/ft_memmove.c
-    src/memory/ft_memchr.c
-    src/memory/ft_memcmp.c
-    src/memory/ft_bzero.c
-    src/memory/ft_calloc.c
-    src/ctype/ft_isalpha.c
-    src/ctype/ft_isdigit.c
-    src/ctype/ft_isalnum.c
-    src/ctype/ft_isascii.c
-    src/ctype/ft_isprint.c
-    src/ctype/ft_toupper.c
-    src/ctype/ft_tolower.c
-    src/stdio/ft_putchar_fd.c
-    src/stdio/ft_putstr_fd.c
-    src/stdio/ft_putendl_fd.c
-    src/stdio/ft_putnbr_fd.c
-    src/stdlib/ft_atoi.c
-    src/stdlib/ft_itoa.c
+project(libft
+    VERSION 1.0.0
+    DESCRIPTION "Educational C standard library implementation"
+    LANGUAGES C
 )
 
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# ============================================================================
+# Library sources - auto-discover from src/
+# ============================================================================
+file(GLOB_RECURSE LIBFT_SOURCES "src/**/*.c")
+
+if(NOT LIBFT_SOURCES)
+    message(WARNING "No libft sources found in src/")
+    set(LIBFT_SOURCES "src/_empty.c")
+endif()
+
+# ============================================================================
+# Library target
+# ============================================================================
 add_library(libft STATIC ${LIBFT_SOURCES})
 
 set_target_properties(libft PROPERTIES
-    OUTPUT_NAME ft
-    C_STANDARD  17
-    C_EXTENSIONS OFF
+    OUTPUT_NAME "ft"
+    VERSION "${CMAKE_PROJECT_VERSION}"
+    SOVERSION 1
 )
 
+# ============================================================================
+# Include directories
+# ============================================================================
 target_include_directories(libft
-    PUBLIC  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/public>
-            $<INSTALL_INTERFACE:include>
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/private
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )
 
-ur_set_compile_flags(libft)
-ur_enable_warnings(libft PRIVATE)
+# ============================================================================
+# Compiler flags
+# ============================================================================
+target_compile_options(libft PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+    -Wpedantic
+    -O2
+    -fsanitize=address
+)
 
-# ── Install ───────────────────────────────────────────────────────────────────
+target_link_options(libft PRIVATE
+    -fsanitize=address
+)
+
+# ============================================================================
+# Installation
+# ============================================================================
 include(GNUInstallDirs)
-install(TARGETS libft
+
+install(
+    TARGETS libft
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-install(DIRECTORY include/public/
+
+install(
+    DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# ── Tests ─────────────────────────────────────────────────────────────────────
-if(UR_BUILD_TESTS)
-    include(../../build_system/cmake/testing.cmake)
-    ur_setup_testing()
+# ============================================================================
+# Tests (if enabled and available)
+# ============================================================================
+if(ENABLE_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
     add_subdirectory(tests)
 endif()
 
-# ── Benchmarks ────────────────────────────────────────────────────────────────
-if(UR_BUILD_BENCHMARKS)
+# ============================================================================
+# Benchmarks (if enabled and available)
+# ============================================================================
+if(ENABLE_BENCHMARKS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/CMakeLists.txt")
     add_subdirectory(benchmarks)
 endif()

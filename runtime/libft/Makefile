@@ -1,77 +1,85 @@
-NAME    = libft.a
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -std=c17
-AR      = ar rcs
+CC = gcc
 
-# Sources
-SRCS_MANDATORY = \
-	src/string/ft_strlen.c \
-	src/string/ft_strcpy.c \
-	src/string/ft_strlcpy.c \
-	src/string/ft_strlcat.c \
-	src/string/ft_strdup.c \
-	src/string/ft_strncmp.c \
-	src/string/ft_strnstr.c \
-	src/string/ft_strchr.c \
-	src/string/ft_strrchr.c \
-	src/string/ft_substr.c \
-	src/string/ft_strjoin.c \
-	src/string/ft_strtrim.c \
-	src/string/ft_split.c \
-	src/memory/ft_memset.c \
-	src/memory/ft_memcpy.c \
-	src/memory/ft_memmove.c \
-	src/memory/ft_memchr.c \
-	src/memory/ft_memcmp.c \
-	src/memory/ft_bzero.c \
-	src/memory/ft_calloc.c \
-	src/ctype/ft_isalpha.c \
-	src/ctype/ft_isdigit.c \
-	src/ctype/ft_isalnum.c \
-	src/ctype/ft_isascii.c \
-	src/ctype/ft_isprint.c \
-	src/ctype/ft_toupper.c \
-	src/ctype/ft_tolower.c \
-	src/stdio/ft_putchar_fd.c \
-	src/stdio/ft_putstr_fd.c \
-	src/stdio/ft_putendl_fd.c \
-	src/stdio/ft_putnbr_fd.c \
-	src/stdlib/ft_atoi.c \
-	src/stdlib/ft_itoa.c
+# Ajustado: Removidos níveis de otimização duplicados. Mantive -O2.
+# Importante: O nome da lib deve bater com o -l. Se a lib é libft.a, usamos -lft.
+CFLAGS = -Wall -Wextra -Werror -Wpedantic -O2 -fsanitize=address -std=c11 -Iinclude
+LDFLAGS = -L$(BUILD_DIR) -lft
 
-SRCS_BONUS = \
-	src/list/ft_lstnew.c \
-	src/list/ft_lstadd_front.c \
-	src/list/ft_lstadd_back.c \
-	src/list/ft_lstsize.c \
-	src/list/ft_lstlast.c \
-	src/list/ft_lstdelone.c \
-	src/list/ft_lstclear.c \
-	src/list/ft_lstiter.c \
-	src/list/ft_lstmap.c
+AR = ar
+ARFLAGS = rcs
 
-OBJS_MANDATORY = $(SRCS_MANDATORY:.c=.o)
-OBJS_BONUS     = $(SRCS_BONUS:.c=.o)
+BUILD_DIR = build
+OBJ_DIR = $(BUILD_DIR)/obj
+TEST_DIR = $(BUILD_DIR)/tests
 
-INCLUDES = -I include/public
+# Nome da biblioteca consistente
+LIB = $(BUILD_DIR)/libft.a
 
-all: $(NAME)
+# =========================
+# Source files
+# =========================
 
-$(NAME): $(OBJS_MANDATORY)
-	$(AR) $(NAME) $(OBJS_MANDATORY)
+# Usando um padrão mais limpo para encontrar os subdiretórios
+SRC = $(wildcard src/**/*.c)
+OBJ = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRC))
 
-bonus: $(OBJS_MANDATORY) $(OBJS_BONUS)
-	$(AR) $(NAME) $(OBJS_MANDATORY) $(OBJS_BONUS)
+# =========================
+# Test files
+# =========================
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+TESTS = $(wildcard tests/**/*.c)
+# Isso transforma tests/string/test_strlen.c em build/tests/string/test_strlen
+TEST_BINS = $(patsubst tests/%.c,$(TEST_DIR)/%,$(TESTS))
+
+# =========================
+# Main targets
+# =========================
+
+# Adicionado $(TEST_BINS) ao 'all' conforme solicitado
+all: $(LIB) $(TEST_BINS)
+
+test: all
+	@echo "Estrutura de testes encontrada: $(TEST_BINS)"
+	@for test_bin in $(TEST_BINS); do \
+		if [ -f $$test_bin ]; then \
+			echo "Running $$test_bin"; \
+			./$$test_bin; \
+		fi \
+	done
+
+# =========================
+# Library
+# =========================
+
+$(LIB): $(OBJ)
+	@mkdir -p $(BUILD_DIR)
+	$(AR) $(ARFLAGS) $@ $^
+
+# =========================
+# Object compilation
+# =========================
+
+$(OBJ_DIR)/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# =========================
+# Test compilation
+# =========================
+
+# Aqui está a correção do link: usamos $(LIB) como dependência 
+# e garantimos que o binário saia na pasta correta.
+$(TEST_DIR)/%: tests/%.c $(LIB)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $< $(LDFLAGS) -o $@
+
+# =========================
+# Cleanup
+# =========================
 
 clean:
-	find src -name "*.o" -delete
+	rm -rf $(BUILD_DIR)
 
-fclean: clean
-	rm -f $(NAME)
+re: clean all
 
-re: fclean all
-
-.PHONY: all bonus clean fclean re
+.PHONY: all clean re test
