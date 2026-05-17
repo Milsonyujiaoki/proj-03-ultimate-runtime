@@ -1,4 +1,4 @@
-#include "../../include/ctype.h"
+#include "libft.h"
 
 int ft_isprint(int c)
 {

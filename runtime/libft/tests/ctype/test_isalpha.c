@@ -1,9 +1,7 @@
 #include <ctype.h>
-#include "../../include/ctype.h"
 #include <stdio.h>
-
+#include <stdio.h>
 int main(void){
-
 	char msg = 'H';
 	char msg2 = '2';
 	char msg3 = '@';

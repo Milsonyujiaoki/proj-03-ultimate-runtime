@@ -1,4 +1,4 @@
-#include "../../include/string.h"
+#include <string.h>
 #include <stdio.h>
 
 void find_str(char const* str, char const* substr)

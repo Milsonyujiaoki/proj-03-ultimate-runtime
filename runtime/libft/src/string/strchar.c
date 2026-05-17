@@ -1,4 +1,4 @@
-#include "../../include/string.h"
+#include "libft.h"
 
 char *ft_strchr(const char* str, int ch)
 {   // Iterate through the string until we find the character or reach the null terminator

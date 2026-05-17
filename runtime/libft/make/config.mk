@@ -10,4 +10,4 @@ BUILD_DIR = build
 OBJ_DIR = $(BUILD_DIR)/obj
 TEST_DIR = $(BUILD_DIR)/tests
 
-LIB = $(BUILD_DIR)/libmini.a
+LIB = $(BUILD_DIR)/libft.a

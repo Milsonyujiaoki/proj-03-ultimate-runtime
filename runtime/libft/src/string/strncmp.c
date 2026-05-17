@@ -1,4 +1,4 @@
-#include "../../include/string.h"
+#include "libft.h"
 
 int ft_strncmp(const char *lhs, const char *rhs, size_t count) {
     for (size_t i = 0; i < count; i++) {

@@ -1,4 +1,5 @@
-#include "../../include/memory.h"
+
+#include <string.h>
 #include <stdio.h>
 
 int main(void) {

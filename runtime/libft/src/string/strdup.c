@@ -1,15 +1,16 @@
-#include "../../include/string.h"
-#include "../../include/memory.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "libft.h"
 
 char *ft_strdup(const char *src)
 {
-    size_t len = ft_strlen(src) + 1;
-    char *new_str = malloc(len);
-    if (new_str == NULL) {
-        return NULL; // Allocation failed
-    }
-    ft_memcpy(new_str, src, len);
-    return new_str;
+	char	*new_str;
+	t_usize	len;
+
+	if (!src)
+		return (NULL);
+	len = ft_strlen(src) + 1;
+	new_str = (char *)ft_malloc(len);
+	if (!new_str)
+		return (NULL);
+	ft_memcpy(new_str, src, len);
+	return (new_str);
 }

@@ -1,6 +1,6 @@
+#include <ctype.h>
 #include <stdio.h>
-#include "../../include/ctype.h"
-
+#include <stdio.h>
 int main(void) {
     // 1. Casos Válidos (Devem passar)
     char validos[] = "\t\n\r\f\v "; // Todos os caracteres de espaço em branco padrão

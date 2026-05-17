@@ -1,4 +1,4 @@
-#include "../../include/string.h"
+#include "libft.h"
 
 char *ft_strcpy(char *dest, const char *src){
 	size_t i = 0;

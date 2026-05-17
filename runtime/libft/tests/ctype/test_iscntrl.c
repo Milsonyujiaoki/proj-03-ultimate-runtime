@@ -1,6 +1,6 @@
+#include <ctype.h>
 #include <stdio.h>
-#include "../../include/ctype.h"
-
+#include <stdio.h>
 int main(void) {
     // 1. Casos Válidos (Devem passar)
     char validos[] = "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\x0F"
