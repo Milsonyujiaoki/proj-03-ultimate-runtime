@@ -40,7 +40,7 @@
 
 /* ── String ──────────────────────────────────────────── */
 # include "string/string.h"
-# include "string/string_view.h"
+
 # include "string/string_builder.h"
 
 /* ── Data Structures ─────────────────────────────────── */

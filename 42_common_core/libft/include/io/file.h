@@ -2,7 +2,7 @@
 # define LIBFT_IO_FILE_H
 
 # include "../core/types.h"
-# include "../core/defs.h"
+
 
 /*
 ** =========================================================

@@ -1,4 +1,4 @@
-#include "internal/internal.h"
+
 #include "algo/compare.h"
 #include "memory/memory.h"
 #include "string/string.h"

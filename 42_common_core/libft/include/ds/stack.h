@@ -2,7 +2,7 @@
 # define LIBFT_DS_STACK_H
 
 # include "../core/types.h"
-# include "../core/defs.h"
+
 # include "vector.h"
 
 /*

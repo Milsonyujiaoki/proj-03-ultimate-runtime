@@ -13,9 +13,9 @@
 
 # include "../core/types.h"
 # include "../core/macros.h"
-# include "../core/compiler.h"
+
 # include "../core/config.h"
-# include "../core/defs.h"
+
 # include "../memory/alloc.h"
 # include "platform.h"
 # include "debug.h"

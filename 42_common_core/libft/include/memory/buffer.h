@@ -2,7 +2,7 @@
 # define LIBFT_MEMORY_BUFFER_H
 
 # include "../core/types.h"
-# include "../core/defs.h"
+
 
 /*
 ** =========================================================

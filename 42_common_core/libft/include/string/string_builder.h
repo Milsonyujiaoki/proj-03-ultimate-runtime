@@ -2,7 +2,7 @@
 # define LIBFT_STRING_BUILDER_H
 
 # include "../core/types.h"
-# include "../core/defs.h"
+
 # include "string_view.h"
 
 /*
